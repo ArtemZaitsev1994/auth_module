@@ -1,11 +1,9 @@
-from typing import Dict
-import datetime
-
 import jwt
 import aiohttp_jinja2
 from aiohttp import web
 
 from auth.utils import verify_password
+from auth.jwt_payload import Admin, BeerBlog
 
 
 @aiohttp_jinja2.template('login.html')
@@ -25,8 +23,8 @@ async def login(request):
         return web.json_response({'success': False, 'message': 'Wrong credentials'})
 
     payload_class = {
-        'beerblog': lambda x: BeerBlog(x),
-        'admin': lambda x: Admin(x)
+        'beerblog': lambda service: BeerBlog(service),
+        'admin': lambda service: Admin(service)
     }
     payload = payload_class[service_name](service)
     jwt_token = jwt.encode(
@@ -41,46 +39,3 @@ async def login(request):
         'auth_link': service['redirect_link'].format(jwt_token),
     }
     return web.json_response(response)
-
-
-# TODO переписать эту байду
-class BaseAuthPayload:
-
-    def __init__(self, service):
-        self.service = service
-
-    def create_payload(self, user: Dict[str, str], **kw):
-
-        payload = {
-            'login': user['login'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=self.service['jwt_ttl_minutes']),
-        }
-
-        return payload
-
-
-class Admin(BaseAuthPayload):
-
-    def create_payload(self, user: Dict[str, str], **kw):
-
-        payload = {
-            'login': user['login'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=self.service['jwt_ttl_minutes']),
-            'is_admin': True
-        }
-
-        return payload
-
-
-class BeerBlog(BaseAuthPayload):
-
-    def create_payload(self, user: Dict[str, str], **kw):
-
-        payload = {
-            'login': user['login'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=self.service['jwt_ttl_minutes']),
-            'is_admin': True,
-            'section': kw['section']
-        }
-
-        return payload

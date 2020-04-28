@@ -2,7 +2,7 @@ from typing import Dict
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from settings import ADMIN_COLLECTION
+from settings import COLLECTION_NAME
 from auth.utils import hash_password
 
 
@@ -10,7 +10,7 @@ class User:
 
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db
-        self.collection = self.db[ADMIN_COLLECTION]
+        self.collection = self.db[COLLECTION_NAME]
 
     async def create_admin(self, login, password):
         data = {

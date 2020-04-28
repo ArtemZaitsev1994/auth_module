@@ -7,7 +7,6 @@ from os.path import isfile
 from envparse import env
 from aiohttp.web import Application
 
-ADMIN_COLLECTION = 'admin'
 
 if isfile('.env'):
     env.read_envfile('.env')
@@ -16,8 +15,7 @@ else:
 
 MONGO_HOST = os.getenv('MONGO_HOST')
 MONGO_DB_NAME = env.str('MONGO_DB_NAME')
-
-REDIS_HOST = env.tuple('REDIS_HOST')
+COLLECTION_NAME = env.str('COLLECTION_NAME')
 
 PORT = env.int('PORT')
 
