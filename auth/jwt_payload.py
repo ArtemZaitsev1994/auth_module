@@ -18,19 +18,6 @@ class BaseAuthPayload:
         return payload
 
 
-class Admin(BaseAuthPayload):
-
-    def create_payload(self, user: Dict[str, str], **kw: Dict[str, str]) -> Dict[str, Any]:
-
-        payload = {
-            'login': user['login'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=self.service['jwt_ttl_minutes']),
-            'is_admin': True
-        }
-
-        return payload
-
-
 class BeerBlog(BaseAuthPayload):
 
     def create_payload(self, user: Dict[str, str], **kw: Dict[str, str]) -> Dict[str, Any]:
@@ -38,7 +25,6 @@ class BeerBlog(BaseAuthPayload):
         payload = {
             'login': user['login'],
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=self.service['jwt_ttl_minutes']),
-            'is_admin': True,
             'section': kw['section']
         }
 

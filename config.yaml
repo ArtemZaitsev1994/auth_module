@@ -6,9 +6,14 @@ services:
     algorithm: HS256
     secret_key: very_seucre_key
 
-
   - name: admin
     jwt_ttl_minutes: 1
     redirect_link: http://0.0.0.0:8000/auth/{}
     algorithm: HS256
     secret_key: very_seucre_key_trust_me
+
+  - name: authorization
+    jwt_ttl_minutes: 1
+    redirect_link: '/create_user'
+    algorithm: HS256
+    secret_key: auth_secret_key

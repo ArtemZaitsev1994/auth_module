@@ -39,7 +39,9 @@ $(document).ready(function(){
             success: function(data){
                 console.log(data)
                 if (data.success){
-                    // localStorage.setItem(`${service}_auth`, `Bearer ${data.token}`)
+                    if (data.service == 'authorization'){
+                        localStorage.setItem(`Authorization`, data.token)
+                    }
                     // console.log(localStorage.getItem(`${service}_auth`))
                     window.location.href = data.auth_link;
                 } else {

@@ -5,9 +5,10 @@ from aiohttp import web
 from routes import routes
 from settings import PORT, setup_app
 from _mongo import mongo_setup
+from auth.middlewares import check_token
 
 
-app = web.Application()
+app = web.Application(middlewares=[check_token])
 
 # add some urls
 for route in routes:
