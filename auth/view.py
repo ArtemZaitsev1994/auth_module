@@ -23,6 +23,7 @@ async def get_create_user_page(request):
 async def login(request):
     response = {
         'success': False,
+        'message': 'Пользователь не найден'
     }
     data = await request.json()
     services = request.app['services']
@@ -36,8 +37,10 @@ async def login(request):
 
     user = await request.app['models']['users'].get_user(data['login'])
 
-    if user is None or not verify_password(user['password'], data['password']):
-        return web.json_response({'success': False, 'message': 'Wrong credentials'})
+    if user is None \
+            or service_name not in user['services'] \
+            or not verify_password(user['password'], data['password']):
+        return web.json_response(response)
 
     payload_class = {
         'beerblog': lambda service: BeerBlog(service),

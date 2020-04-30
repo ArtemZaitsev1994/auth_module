@@ -1,14 +1,22 @@
+import json
+
 from motor import motor_asyncio as ma
 from aiohttp.web import Application
+from aiofile import AIOFile
 
-from settings import MONGO_DB_NAME, MONGO_HOST, ADMIN_LOGIN, ADMIN_PASSWORD
+from settings import MONGO_DB_NAME, MONGO_HOST
 from auth.models import User
+from auth.utils import hash_password
 
 
-async def _check_admin(app: Application):
-    if isinstance(ADMIN_LOGIN, str):
-        if not await app['models']['users'].check_admin(ADMIN_LOGIN):
-            await app['models']['users'].create_admin(ADMIN_LOGIN, ADMIN_PASSWORD)
+async def _check_users(app: Application):
+    async with AIOFile('users.json', 'r') as f:
+        users = json.loads(await f.read())
+
+    for user in users:
+        if not await app['models']['users'].get_user(user['login']):
+            user['password'] = hash_password(user['password'])
+            await app['models']['users'].create_user(user)
 
 
 def mongo_setup(app: Application):
@@ -19,4 +27,4 @@ def mongo_setup(app: Application):
         'users': User(app.db)
     }
 
-    app.on_startup.append(_check_admin)
+    app.on_startup.append(_check_users)
