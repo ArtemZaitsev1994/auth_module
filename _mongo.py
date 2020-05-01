@@ -1,3 +1,4 @@
+import os
 import json
 
 from motor import motor_asyncio as ma
@@ -10,6 +11,9 @@ from auth.utils import hash_password
 
 
 async def _check_users(app: Application):
+    if not os.path.isfile('users.json'):
+        return
+
     async with AIOFile('users.json', 'r') as f:
         users = json.loads(await f.read())
 
