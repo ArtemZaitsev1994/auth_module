@@ -1,19 +1,19 @@
 services:
 
   - name: beerblog
-    jwt_ttl_minutes: 100
-    redirect_link: http://127.0.0.1:8888/auth/{}
+    jwt_ttl_minutes: 60
+    redirect_link: http://0.0.0.0:8083/auth/{}
     algorithm: HS256
     secret_key: very_seucre_key
 
   - name: admin
-    jwt_ttl_minutes: 100
-    redirect_link: http://0.0.0.0:8000/auth/{}
+    jwt_ttl_minutes: 20
+    redirect_link: http://0.0.0.0:8082/auth/{}
     algorithm: HS256
     secret_key: very_seucre_key_trust_me
 
   - name: authorization
-    jwt_ttl_minutes: 1
+    jwt_ttl_minutes: 10
     redirect_link: '/create_user'
     algorithm: HS256
     secret_key: auth_secret_key
