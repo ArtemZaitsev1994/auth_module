@@ -15,5 +15,5 @@ RUN chmod +x /wait && chmod +x ./start.sh
 
 CMD ./start.sh
 
-# Make port 8081 available to the world outside this container
-EXPOSE 8081
+# Make port 8003 available to the world outside this container
+EXPOSE 8003

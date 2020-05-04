@@ -2,13 +2,13 @@ services:
 
   - name: beerblog
     jwt_ttl_minutes: 60
-    redirect_link: http://0.0.0.0:8083/auth/{}
+    redirect_link: http://212.220.216.173:10501/auth/{}
     algorithm: HS256
     secret_key: very_seucre_key
 
   - name: admin
     jwt_ttl_minutes: 20
-    redirect_link: http://0.0.0.0:8082/auth/{}
+    redirect_link: http://212.220.216.173:10502/auth/{}
     algorithm: HS256
     secret_key: very_seucre_key_trust_me
 
