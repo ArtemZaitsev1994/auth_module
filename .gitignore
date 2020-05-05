@@ -3,3 +3,4 @@ __pycache__
 questions/__pycache__
 users.json
 data
+config.yaml
