@@ -54,10 +54,13 @@ async def login(request):
         service['algorithm']
     ).decode('utf-8')
 
+    del user['_id']
+
     response = {
         'success': True,
         'token': jwt_token,
         'auth_link': service['redirect_link'].format(jwt_token),
-        'service': service_name
+        'service': service_name,
+        'user': user
     }
     return web.json_response(response)
