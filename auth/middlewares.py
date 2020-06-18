@@ -1,6 +1,5 @@
 import jwt
 from aiohttp.web import middleware, json_response
-from settings import JWT_ALGORITHM, JWT_SECRET_KEY
 
 
 @middleware
@@ -19,12 +18,16 @@ async def check_token(request, handler):
     if not token:
         # нет токена в заголовке
         return json_response(response)
-
-    try:
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
-    except (jwt.DecodeError, jwt.ExpiredSignatureError):
-        # токен невалидный или истек
+    
+    payload = None
+    for service in request.app['services']:
+        try:
+            payload = jwt.decode(token, service['secret_key'], algorithms=[service['algorithm']])
+        except (jwt.DecodeError, jwt.ExpiredSignatureError):
+            # токен невалидный или истек
+            continue
+    if payload is None:
         return json_response(response)
-
+     
     request['login'] = payload['login']
-    return await handler(request)
+    return await handler(request)    
