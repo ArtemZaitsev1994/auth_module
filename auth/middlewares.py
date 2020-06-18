@@ -20,7 +20,7 @@ async def check_token(request, handler):
         return json_response(response)
     
     payload = None
-    for service in request.app['services']:
+    for service in request.app['services'].values():
         try:
             payload = jwt.decode(token, service['secret_key'], algorithms=[service['algorithm']])
         except (jwt.DecodeError, jwt.ExpiredSignatureError):
