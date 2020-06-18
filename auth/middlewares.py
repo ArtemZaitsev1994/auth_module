@@ -21,9 +21,10 @@ async def check_token(request, handler):
         return json_response(response)
 
     try:
-        jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
     except (jwt.DecodeError, jwt.ExpiredSignatureError):
         # токен невалидный или истек
         return json_response(response)
 
+    request['login'] = payload['login']
     return await handler(request)

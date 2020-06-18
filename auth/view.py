@@ -2,7 +2,7 @@ import jwt
 import aiohttp_jinja2
 from aiohttp import web
 
-from auth.utils import verify_password
+from auth.utils import verify_password, hash_password
 from auth.jwt_payload import BaseAuthPayload, BeerBlog
 from settings import SERVICES
 
@@ -54,10 +54,34 @@ async def login(request):
         service['algorithm']
     ).decode('utf-8')
 
+    del user['_id']
     response = {
         'success': True,
         'token': jwt_token,
         'auth_link': service['redirect_link'].format(jwt_token),
-        'service': service_name
+        'service': service_name,
+        'user': user
+    }
+    return web.json_response(response)
+
+
+async def change_password(request):
+    response = {
+        'success': False,
+        'message': 'Неверный пароль'
+    }
+    data = await request.json()
+    service_name = 'beerblog'
+
+    user = await request.app['models']['users'].get_user_by_service(request['login'], service_name)
+
+    if user is None \
+            or not verify_password(user['password'], data['psw']):
+        return web.json_response(response)
+
+    await request.app['models']['users'].change_password(user['_id'], hash_password(data['new_psw']))
+
+    response = {
+        'success': True,
     }
     return web.json_response(response)

@@ -1,10 +1,11 @@
-from auth.view import login, get_login_page, get_create_user_page
+from auth.view import login, get_login_page, get_create_user_page, change_password
 from auth.api import create_user, check_token
 
 
 routes = [
     ('GET', '/', get_login_page, 'login_page'),
     ('POST', '/login', login, 'login'),
+    ('POST', '/login/change_password', change_password, 'change_password'),
 
     ('GET', '/create_user', get_create_user_page, 'create_user_page'),
 

@@ -25,7 +25,6 @@ class BeerBlog(BaseAuthPayload):
         payload = {
             'login': user['login'],
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=self.service['jwt_ttl_minutes']),
-            'section': kw['section']
         }
 
         return payload
